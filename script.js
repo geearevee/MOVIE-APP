@@ -24,7 +24,7 @@ fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=a73c6d976944b3cb54
     })
 })
 
-
+let movieTicketPrice =0;
 // const moveDivs = document.querySelectorAll('.movie');
 // console.log(moveDivs);
 // [...moveDivs].forEach(movieDiv => {
@@ -44,6 +44,8 @@ searchform.addEventListener("submit", function(event){
     event.preventDefault();
     const movieName = document.querySelector("#search").value.trim();
     console.log(movieName);
+    // https://api.themoviedb.org/3/movie/{movie_id}
+
 })
 
 
@@ -61,16 +63,38 @@ document.querySelector('body').addEventListener('click', (e) => {
         // fetch the move of that id on that endpoint of the api
         // and create the html elemnt using javascript enter that information 
         // and append in the body
-        const element = `
-        <div class="movieDetailsContainer">
-            <div class="movieDetails">  
-                <i class="fa-solid fa-xmark close-modal"></i>
-            </div>
-        </div>
-        `
-        document.querySelector("#main").insertAdjacentHTML('beforeEnd', element);
+        insertModal(e.target.dataset.movieId);
     }
     if(e.target.classList.contains("close-modal")){
         document.querySelector(".movieDetailsContainer").remove();
     }
 })
+
+async function insertModal(movieId) {
+        const movieData = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=a73c6d976944b3cb5444416eee8bd8d1`).then(result => result.json())
+        console.log(movieData);
+        let genere = movieData.genres.map(item => item.name).join(" ");
+        movieTicketPrice = Math.floor(Math.random() * 50) + 250
+        
+        const element = `
+        <div class="movieDetailsContainer">
+            <div class="movieDetails">  
+                <i class="fa-solid fa-xmark close-modal"></i>
+                <div class="movie-popup">
+                    <img src="http://image.tmdb.org/t/p/w500${movieData["poster_path"]}" alt="">
+                    <div class="movie-info">
+                        <p class="movie-name">${movieData.title}</p>
+                        <p class="movie-rating"><i class="fa-solid fa-star"></i> ${movieData.vote_average} / 10</p>
+                        <p class="movie-lang">${movieData.original_language}</p>
+                        <p class="movie-duration">${movieData.runtime} min</p>
+                        <p class="movie-genere">${genere}</p>
+                        <p class="movie-desc">${movieData.overview}</p>
+                        <p class="movie-price">${movieTicketPrice} Rs</p>
+                        <a href="/checkout.html" class="book-tickets-button">Book Tickests</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `
+        document.querySelector("#main").insertAdjacentHTML('beforeEnd', element);
+}
