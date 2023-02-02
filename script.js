@@ -90,7 +90,7 @@ async function insertModal(movieId) {
                         <p class="movie-genere">${genere}</p>
                         <p class="movie-desc">${movieData.overview}</p>
                         <p class="movie-price">${movieTicketPrice} Rs</p>
-                        <a href="/checkout.html" class="book-tickets-button">Book Tickests</a>
+                        <a href="/checkout.html" class="book-tickets-button">Book Tickets</a>
                     </div>
                 </div>
             </div>
@@ -98,3 +98,106 @@ async function insertModal(movieId) {
         `
         document.querySelector("#main").insertAdjacentHTML('beforeEnd', element);
 }
+
+/* 
+* serach functionality 
+* 
+* 
+**/
+
+// implementing debounce on search input 
+// select the search input
+let search = document.querySelector("#search");
+let timeOut; // undefined
+search.addEventListener("input", function(e) {
+    if(e.target.value === "") window.location.href = "index.html";
+    clearTimeout(timeOut); //
+    timeOut = setTimeout(searchResult, 1000);
+})
+
+async function searchResult(){
+    const movies = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=a73c6d976944b3cb5444416eee8bd8d1&language=en-US&page=1&include_adult=false&query=${search.value.trim()}`)
+    .then((data)=> data.json())
+    .then((res)=> res)
+    .catch((error) => console.log(error))
+    
+    console.log(movies);
+
+    const moviesContainer = document.querySelector('#main');
+
+    while(moviesContainer.firstChild){
+        moviesContainer.firstChild.remove();
+    }
+    movies.results.forEach(movie => {
+        const element = `
+        <div data-movie-name="${movie["original_title"]}" data-movie-id="${movie["id"]}" class="movie">
+            <img data-movie-id="${movie["id"]}" data-movie-name="${movie["original_title"]}" src="http://image.tmdb.org/t/p/w500${movie["poster_path"]}">
+            <div data-movie-id="${movie["id"]}" class="movie-info" data-movie-name="${movie["original_title"]}">
+                <h3 data-movie-id="${movie["id"]}" data-movie-name="${movie["original_title"]}">${movie["original_title"]}</h3>
+                <span class="green" data-movie-id="${movie["id"]}" data-movie-name="${movie["original_title"]}">${movie["vote_average"]}</span>
+            </div>
+            <div data-movie-id="${movie["id"]}" data-movie-name="${movie["original_title"]}" class="overview" data-movie-name="${movie["original_title"]}">
+                ${movie["overview"]}
+            </div>
+        </div>
+        `
+        moviesContainer.insertAdjacentHTML('afterBegin', element);
+    })
+    
+}
+
+// fecth .
+
+// res =  {genere :  [{id: , nameofgenere}, {id: , nameofgenere} ....., {id: , nameofgenere}]} 
+
+// https://api.themoviedb.org/3/genre/movie/list?api_key=a73c6d976944b3cb5444416eee8bd8d1&language=en-US
+fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=a73c6d976944b3cb5444416eee8bd8d1&language=en-US`)
+.then((data)=> data.json())
+.then((res)=> {
+    // wirte your rendring logic here
+    
+    const g = res.genres; //[{id: , nameofgenere}, {id: , nameofgenere} ....., {id: , nameofgenere}]
+    g.forEach(genres => { // {id: , name}
+      const k =  `<h3 data-id="${genres.id}">${genres.name}</h3>`
+      console.log(genres.id, genres.name);
+      const container = document.querySelector("#genre");
+      console.log(container ,k);
+      container.insertAdjacentHTML('beforeend', k);
+    })
+})
+.catch((error) => console.log(error))
+
+document.querySelector("#genre").addEventListener('click', function(e) {
+    console.log(e.target.id)
+    if(e.target.id !== "genre"){
+        const id = e.target.dataset.id;
+        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=a73c6d976944b3cb5444416eee8bd8d1&with_genres=${id}`)
+        .then(response => response.json())
+        .then(movies => {
+            const moviesContainer = document.querySelector('#main');
+
+            while(moviesContainer.firstChild){
+                moviesContainer.firstChild.remove();
+            }
+            movies.results.forEach(movie => {
+                const element = `
+                <div data-movie-name="${movie["original_title"]}" data-movie-id="${movie["id"]}" class="movie">
+                    <img data-movie-id="${movie["id"]}" data-movie-name="${movie["original_title"]}" src="http://image.tmdb.org/t/p/w500${movie["poster_path"]}">
+                    <div data-movie-id="${movie["id"]}" class="movie-info" data-movie-name="${movie["original_title"]}">
+                        <h3 data-movie-id="${movie["id"]}" data-movie-name="${movie["original_title"]}">${movie["original_title"]}</h3>
+                        <span class="green" data-movie-id="${movie["id"]}" data-movie-name="${movie["original_title"]}">${movie["vote_average"]}</span>
+                    </div>
+                    <div data-movie-id="${movie["id"]}" data-movie-name="${movie["original_title"]}" class="overview" data-movie-name="${movie["original_title"]}">
+                        ${movie["overview"]}
+                    </div>
+                </div>
+                `
+                moviesContainer.insertAdjacentHTML('afterBegin', element);
+            })
+        });
+    }
+})
+//  add eventlistner on this container 
+// e.target.id 
+
+

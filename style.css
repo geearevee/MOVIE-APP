@@ -18,8 +18,14 @@ body{
 header{
     padding: 1rem;
     display:flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
     background-color: var(--secondry-color);
+}
+header img{
+    width: 520px;
+    height:auto;
 }
 
 .search{
@@ -180,9 +186,16 @@ main{
 }
 .movie-duration,
 .movie-genere
-/* 
-.movie-gere,
-.movie-duration{
+{
     display: inline-block;
 }
-*/
+#content{
+    display:flex;
+    
+}
+#genre{
+    padding-left: 20px;
+}
+#genre h3{
+    cursor: pointer;
+}
