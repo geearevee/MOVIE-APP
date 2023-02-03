@@ -1,0 +1,31 @@
+#main-content{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+}
+       
+
+    #left-section{
+    border: 1px solid black;
+
+    }
+
+    #right-section{
+        border: 1px solid black;
+
+    }
+    .span-tag{
+        margin-left: 170px;
+    }
+
+    .span-tag1{
+        margin-left:87px;
+    }
+
+    h1{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
