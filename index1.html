@@ -13,16 +13,16 @@
     <div id="main-content">
     <div id="left-section">
       <h1>Summary</h1>
-      <p>Movie name</p>
+      <p id="movie-name">Movie name</p>
       <span >Classic ticket </span>
-      <span class="span-tag">price</span><br>
+      <span class="span-tag">price </span><span id="movie-price"></span><br>
       <label>Number of tickets</label>
       <input type="number" id ="ticketnumber"><br>
       <span>Convenience Fee (1.75%)</span>
       <span class="span-tag1">price</span>
       <hr>
       <span>Sub total</span>
-      <span class="span-tag">totalprice</span>
+      <span class="span-tag">totalprice <span id="multiplied-price"></span></span>
 
     </div>
     <div id="right-section">
@@ -56,4 +56,16 @@
         
 
 </body>
+<script>
+  let urlObj = new URLSearchParams(document.location.search);
+  const price = Number(urlObj.get('price'));
+  const name = urlObj.get('name');
+
+  console.log(window["movie-name"], window["movie-price"])
+  window["movie-name"].innerHTML = name;
+  window["movie-price"].innerHTML = price;
+  window["ticketnumber"].addEventListener('change', (e) => {
+    window["multiplied-price"].innerHTML = (e.target.value * price);
+  })
+</script>
 </html>

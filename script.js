@@ -90,7 +90,7 @@ async function insertModal(movieId) {
                         <p class="movie-genere">${genere}</p>
                         <p class="movie-desc">${movieData.overview}</p>
                         <p class="movie-price">${movieTicketPrice} Rs</p>
-                        <a href="/checkout.html" class="book-tickets-button">Book Tickets</a>
+                        <a href="/checkout.html" data-name="${movieData.title}" data-price="${movieTicketPrice}" class="book-tickets-button">Book Tickets</a>
                     </div>
                 </div>
             </div>
@@ -200,4 +200,46 @@ document.querySelector("#genre").addEventListener('click', function(e) {
 //  add eventlistner on this container 
 // e.target.id 
 
+// index => checkout
+// book thicket
+// book thichket => old url => new url 
+// we also want to send the price of the movie the user has clicked on
+document.querySelector('body').addEventListener('click', (e) => {
+    if(e.target.classList.contains('book-tickets-button')){
+        e.preventDefault();
+        const price = e.target.dataset.price;
+        const name = e.target.dataset.name;
+        console.log(`${location.origin}/index1.html?price=${price}`)
+        window.location.href = `${location.origin}/index1.html?price=${price}&name=${name}`; 
+    }
+    // console.log("we don't care what happens here")
+})
+
+
+// when you click on the a tag
+// the a tag href was index1.html
+// 
+
+/* 
+
+<div class="movieDetailsContainer">
+            <div class="movieDetails">  
+                <i class="fa-solid fa-xmark close-modal"></i>
+                <div class="movie-popup">
+                    <img src="http://image.tmdb.org/t/p/w500${movieData["poster_path"]}" alt="">
+                    <div class="movie-info">
+                        <p class="movie-name">${movieData.title}</p>
+                        <p class="movie-rating"><i class="fa-solid fa-star"></i> ${movieData.vote_average} / 10</p>
+                        <p class="movie-lang">${movieData.original_language}</p>
+                        <p class="movie-duration">${movieData.runtime} min</p>
+                        <p class="movie-genere">${genere}</p>
+                        <p class="movie-desc">${movieData.overview}</p>
+                        <p class="movie-price">${movieTicketPrice} Rs</p>
+                        <a href="/checkout.html" class="book-tickets-button">Book Tickets</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+*/
 
